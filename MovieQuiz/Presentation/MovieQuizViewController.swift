@@ -81,16 +81,16 @@ final class MovieQuizViewController: UIViewController {
     
     @IBAction private func noButtonClick(_ sender: Any) {
         let currentQuestion = questions[currentQuestionIndex]
-           let givenAnswer = false
+        let givenAnswer = false
            
-           showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
+        showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
     }
     
     @IBAction private func yesButtonClick(_ sender: Any) {
         let currentQuestion = questions[currentQuestionIndex]
-           let givenAnswer = true
+        let givenAnswer = true
            
-           showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
+        showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
     }
     
     override func viewDidLoad() {
@@ -100,6 +100,7 @@ final class MovieQuizViewController: UIViewController {
         textLabel.text = questions[currentQuestionIndex].text
         counterLabel.text = "1/\(questions.count)"
         imageView.image = UIImage(named: questions[currentQuestionIndex].image)
+        imageView.layer.cornerRadius = 20
         
     }
     
