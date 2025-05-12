@@ -9,6 +9,9 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
+        <array key="YS Display-Bold.ttf">
+            <string>YSDisplay-Bold</string>
+        </array>
         <array key="YS Display-Medium.ttf">
             <string>YSDisplay-Medium</string>
         </array>
@@ -73,6 +76,9 @@
                                                 <state key="normal" title="Нет">
                                                     <color key="titleColor" name="YP Black"/>
                                                 </state>
+                                                <connections>
+                                                    <action selector="noButtonClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="42C-z6-tJs"/>
+                                                </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="inT-fB-sEA" userLabel="Yes Button">
                                                 <rect key="frame" x="197" y="0.0" width="177" height="60"/>
@@ -82,6 +88,9 @@
                                                 <state key="normal" title="Да">
                                                     <color key="titleColor" name="YP Black"/>
                                                 </state>
+                                                <connections>
+                                                    <action selector="yesButtonClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="aWy-at-IXk"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                         <constraints>
@@ -113,7 +122,10 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="counterLabel" destination="PpA-cK-ty8" id="gR2-B1-r1n"/>
+                        <outlet property="imageView" destination="9qN-RT-kek" id="b5G-Kq-ym7"/>
                         <outlet property="noButton" destination="ME2-cE-Df8" id="5BJ-Oe-VAw"/>
+                        <outlet property="textLabel" destination="gEj-gC-Fan" id="Jjg-yr-Bap"/>
                         <outlet property="yesButton" destination="inT-fB-sEA" id="Ns2-FI-sO7"/>
                     </connections>
                 </viewController>
