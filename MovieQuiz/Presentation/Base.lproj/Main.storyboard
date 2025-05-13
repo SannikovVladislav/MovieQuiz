@@ -4,7 +4,6 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="23721"/>
-        <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -113,13 +112,6 @@
                             </stackView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
-                        <color key="backgroundColor" name="YP Black"/>
-                        <constraints>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="l2r-GU-BKM" secondAttribute="trailing" constant="20" id="5oc-sO-ARo"/>
-                            <constraint firstItem="l2r-GU-BKM" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="10" id="aLa-EC-99A"/>
-                            <constraint firstItem="l2r-GU-BKM" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="ntS-yd-pk6"/>
-                            <constraint firstItem="l2r-GU-BKM" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="rTo-Z3-pD0"/>
-                        </constraints>
                     </view>
                     <connections>
                         <outlet property="counterLabel" destination="PpA-cK-ty8" id="gR2-B1-r1n"/>
