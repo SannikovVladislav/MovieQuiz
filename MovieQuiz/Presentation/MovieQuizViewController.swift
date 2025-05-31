@@ -27,7 +27,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     private var questionFactory: QuestionFactoryProtocol?
     private var currentQuestion: QuizQuestion?
     private var alertPresenter: AlertPresenter?
-    
+    private var statisticService: StatisticServiceProtocol?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,6 +39,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         self.questionFactory = questionFactory
         questionFactory.requestNextQuestion()
         alertPresenter = AlertPresenter(delegate: self)
+        statisticService = StatisticService()
     }
     // MARK: - QuestionFactoryDelegate
     
@@ -48,7 +49,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         }
         currentQuestion = question
         let viewModel = convert(model: question)
-        
         DispatchQueue.main.async { [weak self] in
             self?.show(quiz: viewModel)
         }
@@ -67,9 +67,14 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     }
     private func showNextQuestionOrResults() {
         if currentQuestionIndex == questionsAmount - 1 {
-            let text = correctAnswers == questionsAmount ?
-            "Поздравляем, вы ответили на 10 из 10!" :
-            "Вы ответили на \(correctAnswers) из 10, попробуйте ещё раз!"
+            guard let statisticService = statisticService else {return}
+            let gameResult = GameResult(correct: correctAnswers, total: questionsAmount, date: Date())
+            statisticService.store(gameResult: gameResult)
+            let gamesCount = statisticService.gamesCount
+            let bestGame = statisticService.bestGame
+            let totalAccuracy = statisticService.totalAccuracy
+            let date = bestGame.date.dateTimeString
+            let text = "Ваш результат: \(correctAnswers)/\(questionsAmount)\n Количество сыгранных квизов: \(gamesCount) \n Рекорд: \(bestGame.correct)/\(bestGame.total) (\(date)) \n Средняя точность: \(String (format: "%.2f", totalAccuracy))%"
             let viewModel = QuizResultsViewModel(
                 title: "Этот раунд окончен!",
                 text: text,
