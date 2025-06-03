@@ -1,5 +1,5 @@
 import Foundation
 
-protocol AlertPresenterProtocol {
+protocol AlertPresenterProtocol: AnyObject{
     func displayAlert (model: AlertModel)
 }
