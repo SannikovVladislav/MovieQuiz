@@ -35,7 +35,6 @@ final class StatisticService: StatisticServiceProtocol {
                storage.set(newValue, forKey: Keys.totalCorrectAnswers.rawValue)
            }
        }
-       
        var totalQuestionAsked: Int {
            get {
                storage.integer(forKey: Keys.totalQuestionAsked.rawValue)
@@ -44,13 +43,11 @@ final class StatisticService: StatisticServiceProtocol {
                storage.set(newValue, forKey: Keys.totalQuestionAsked.rawValue)
            }
        }
-    
     var totalAccuracy: Double {
         guard totalCorrectAnswers > 0 else { return 0 }
         return (Double(totalCorrectAnswers)/Double(totalQuestionAsked))*100
         
     }
-    
     func store(gameResult: GameResult) {
             totalQuestionAsked += gameResult.total
             totalCorrectAnswers += gameResult.correct
