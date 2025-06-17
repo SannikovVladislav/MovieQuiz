@@ -120,11 +120,9 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         self.present(alert, animated: true, completion: nil)
     }
     private func showLoadingIndicator() {
-        activityIndicator.isHidden = false
         activityIndicator.startAnimating()
     }
-    private func hideLoadingIndicator () {
-        activityIndicator.isHidden = true
+    private func hideLoadingIndicator () {       
         activityIndicator.stopAnimating()
     }
     private func showNetworkError(message: String) {
@@ -136,7 +134,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
                 guard let self = self else { return }
                 self.currentQuestionIndex = 0
                 self.correctAnswers = 0
-                self.questionFactory?.requestNextQuestion()
+                self.questionFactory?.loadData()
             }
         alertPresenter?.displayAlert(model: model)
     }
