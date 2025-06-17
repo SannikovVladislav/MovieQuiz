@@ -8,20 +8,6 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     @IBOutlet private var imageView: UIImageView!
     @IBOutlet private var counterLabel: UILabel!
     @IBOutlet private var textLabel: UILabel!
-    @IBAction private func noButtonClick(_ sender: Any) {
-        guard let currentQuestion = currentQuestion else {
-            return
-        }
-        let givenAnswer = false
-        showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
-    }
-    @IBAction private func yesButtonClick(_ sender: Any) {
-        guard let currentQuestion = currentQuestion else {
-            return
-        }
-        let givenAnswer = true
-        showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
-    }
     private var currentQuestionIndex = 0
     private var correctAnswers = 0
     private let questionsAmount: Int = 10
@@ -52,6 +38,16 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         DispatchQueue.main.async { [weak self] in
             self?.show(quiz: viewModel)
         }
+    }
+    func present(alert: UIAlertController){
+        self.present(alert, animated: true, completion: nil)
+    }
+    func didLoadDataFromServer() {
+        activityIndicator.isHidden = true
+        questionFactory?.requestNextQuestion()
+    }
+    func didFailToLoadData(with error: Error) {
+        showNetworkError(message: error.localizedDescription)
     }
     private func convert(model: QuizQuestion) -> QuizStepViewModel {
         let questionStep = QuizStepViewModel(
@@ -116,13 +112,10 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         )
         alertPresenter.displayAlert(model:alert)
     }
-    func present(alert: UIAlertController){
-        self.present(alert, animated: true, completion: nil)
-    }
     private func showLoadingIndicator() {
         activityIndicator.startAnimating()
     }
-    private func hideLoadingIndicator () {       
+    private func hideLoadingIndicator () {
         activityIndicator.stopAnimating()
     }
     private func showNetworkError(message: String) {
@@ -138,12 +131,19 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
             }
         alertPresenter?.displayAlert(model: model)
     }
-    func didLoadDataFromServer() {
-        activityIndicator.isHidden = true
-        questionFactory?.requestNextQuestion()
+    @IBAction private func noButtonClick(_ sender: Any) {
+        guard let currentQuestion = currentQuestion else {
+            return
+        }
+        let givenAnswer = false
+        showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
     }
-    func didFailToLoadData(with error: Error) {
-        showNetworkError(message: error.localizedDescription)
+    @IBAction private func yesButtonClick(_ sender: Any) {
+        guard let currentQuestion = currentQuestion else {
+            return
+        }
+        let givenAnswer = true
+        showAnswerResult(isCorrect: givenAnswer == currentQuestion.correctAnswer)
     }
 }
 
