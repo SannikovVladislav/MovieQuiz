@@ -104,7 +104,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
             message: result.text,
             buttonText: result.buttonText,
             completion: { [weak self] in
-                guard let self = self else {return}
+                guard let self else {return}
                 self.currentQuestionIndex = 0
                 self.correctAnswers = 0
                 questionFactory?.requestNextQuestion()
@@ -124,7 +124,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
             title: "Ошибка",
             message: message,
             buttonText: "Попробовать еще раз") { [weak self] in
-                guard let self = self else { return }
+                guard let self else { return }
                 self.currentQuestionIndex = 0
                 self.correctAnswers = 0
                 self.questionFactory?.loadData()
