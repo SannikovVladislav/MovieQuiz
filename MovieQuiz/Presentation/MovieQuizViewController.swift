@@ -30,14 +30,7 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     // MARK: - QuestionFactoryDelegate
     
     func didReceiveNextQuestion(question: QuizQuestion?) {
-        guard let question = question else {
-            return
-        }
-        currentQuestion = question
-        let viewModel = presenter.convert(model: question)
-        DispatchQueue.main.async { [weak self] in
-            self?.show(quiz: viewModel)
-        }
+        presenter.didReceiveNextQuestion(question: question)
     }
     func present(alert: UIAlertController){
         self.present(alert, animated: true, completion: nil)
@@ -49,13 +42,29 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
     func didFailToLoadData(with error: Error) {
         showNetworkError(message: error.localizedDescription)
     }
-    
-    private func show(quiz step: QuizStepViewModel) {
+    func show(quiz step: QuizStepViewModel) {
         imageView.image = step.image
         textLabel.text = step.question
         counterLabel.text = step.questionNumber
+        imageView.layer.borderColor = UIColor.clear.cgColor
     }
     private func showNextQuestionOrResults() {
+        if presenter.isLastQuestion() {
+            let text = "Вы ответили на \(correctAnswers) из 10, попробуйте еще раз!"
+            let viewModel = QuizResultsViewModel(
+                title: "Этот раунд окончен!",
+                text: text,
+                buttonText: "Сыграть ещё раз")
+            show(quiz: viewModel)
+        } else {
+            presenter.switchToNextQuestion()
+            questionFactory?.requestNextQuestion()
+        }
+    }
+    func show(quiz result: QuizResultsViewModel) {
+        guard let alertPresenter = alertPresenter else {
+            return
+        }
         if presenter.isLastQuestion() {
             guard let statisticService = statisticService else {return}
             let gameResult = GameResult(correct: correctAnswers, total: presenter.questionsAmount, date: Date())
@@ -65,16 +74,18 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
             let totalAccuracy = statisticService.totalAccuracy
             let date = bestGame.date.dateTimeString
             let text = "Ваш результат: \(correctAnswers)/\(presenter.questionsAmount)\n Количество сыгранных квизов: \(gamesCount) \n Рекорд: \(bestGame.correct)/\(bestGame.total) (\(date)) \n Средняя точность: \(String (format: "%.2f", totalAccuracy))%"
-            let viewModel = QuizResultsViewModel(
-                title: "Этот раунд окончен!",
-                text: text,
-                buttonText: "Сыграть ещё раз")
-            show(quiz: viewModel)
-            imageView.layer.borderColor = UIColor.clear.cgColor
+            let alert = AlertModel(title: result.title, message: text, buttonText: result.buttonText, completion: {
+                [weak self] in
+                    guard let self = self else {return}
+                    self.presenter.resetQuestionIndex()
+                    self.correctAnswers = 0
+                    questionFactory?.requestNextQuestion()
+                }
+            )
+            alertPresenter.displayAlert(model:alert)
         } else {
             presenter.switchToNextQuestion()
             self.questionFactory?.requestNextQuestion()
-            imageView.layer.borderColor = UIColor.clear.cgColor
         }
     }
     func showAnswerResult(isCorrect: Bool) {
@@ -86,25 +97,10 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         imageView.layer.borderColor = isCorrect ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
             guard let self else { return }
-            self.showNextQuestionOrResults()
+            self.presenter.correctAnswers = self.correctAnswers
+            self.presenter.questionFactory = self.questionFactory
+            self.presenter.showNextQuestionOrResults()
         }
-    }
-    private func show(quiz result: QuizResultsViewModel) {
-        guard let alertPresenter = alertPresenter else {
-            return
-        }
-        let alert = AlertModel(
-            title: result.title,
-            message: result.text,
-            buttonText: result.buttonText,
-            completion: { [weak self] in
-                guard let self = self else {return}
-                self.presenter.resetQuestionIndex()
-                self.correctAnswers = 0
-                questionFactory?.requestNextQuestion()
-            }
-        )
-        alertPresenter.displayAlert(model:alert)
     }
     private func showLoadingIndicator() {
         activityIndicator.startAnimating()
@@ -126,12 +122,13 @@ final class MovieQuizViewController: UIViewController, QuestionFactoryDelegate, 
         alertPresenter?.displayAlert(model: model)
     }
     @IBAction private func noButtonClick(_ sender: Any) {
-        presenter.currentQuestion = currentQuestion
         presenter.noButtonClicked()
     }
     @IBAction private func yesButtonClick(_ sender: Any) {
-        presenter.currentQuestion = currentQuestion
         presenter.yesButtonClicked()
     }
 }
 
+
+    
+    
