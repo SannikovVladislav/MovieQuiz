@@ -1,9 +1,9 @@
 import Foundation
 
-protocol StatisticServiceProtocol {
-    var gamesCount: Int { get }
-    var bestGame: GameResult { get }
+protocol StatisticService {
+    func store(correct count: Int, total amount: Int)
     var totalAccuracy: Double { get }
-    func store(gameResult: GameResult)
+    var gamesCount: Int { get }
+    var bestGame: GameRecord { get }
 }
 
