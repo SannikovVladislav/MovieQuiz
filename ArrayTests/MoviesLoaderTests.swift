@@ -14,7 +14,6 @@ class MoviesLoaderTests: XCTestCase {
         let loader = MoviesLoader(networkClient: stubNetworkClient)
         let expectation = expectation(description: "Loading expectation")
         loader.loadMovies { result in
-            
             switch result {
             case .success(let movies):
                 XCTAssertEqual(movies.items.count, 2)
@@ -30,7 +29,6 @@ class MoviesLoaderTests: XCTestCase {
         let loader = MoviesLoader(networkClient: stubNetworkClient)
         let expectation = expectation(description: "Loading expectation")
         loader.loadMovies { result in
-            
             switch result {
             case .failure(let error):
                 XCTAssertNotNil(error)
@@ -42,14 +40,11 @@ class MoviesLoaderTests: XCTestCase {
         waitForExpectations(timeout: 1)
     }
 }
-
 struct StubNetworkClient: NetworkRouting {
-    
     enum TestError: Error {
-    case test
+        case test
     }
-    
-    let emulateError: Bool 
+    let emulateError: Bool
     
     func fetch(url: URL, handler: @escaping (Result<Data, Error>) -> Void) {
         if emulateError {
