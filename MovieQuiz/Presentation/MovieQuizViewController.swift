@@ -48,28 +48,11 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
         imageView.layer.borderWidth = 8
         imageView.layer.borderColor = isCorrectAnswer ? UIColor.ypGreen.cgColor : UIColor.ypRed.cgColor
     }
-<<<<<<< HEAD
-    private func show(quiz result: QuizResultsViewModel) {
-        guard let alertPresenter = alertPresenter else {
-            return
-        }
-        let alert = AlertModel(
-            title: result.title,
-            message: result.text,
-            buttonText: result.buttonText,
-            completion: { [weak self] in
-                guard let self else {return}
-                self.currentQuestionIndex = 0
-                self.correctAnswers = 0
-                questionFactory?.requestNextQuestion()
-            }
-        )
-        alertPresenter.displayAlert(model:alert)
-=======
+
     func showLoadingIndicator() {
         activityIndicator.isHidden = false // говорим, что индикатор загрузки не скрыт
         activityIndicator.startAnimating() // включаем анимацию
->>>>>>> sprint_07
+
     }
     func hideLoadingIndicator() {
         activityIndicator.isHidden = true
@@ -79,25 +62,12 @@ final class MovieQuizViewController: UIViewController, MovieQuizViewControllerPr
         let alert = UIAlertController(
             title: "Ошибка",
             message: message,
-<<<<<<< HEAD
-            buttonText: "Попробовать еще раз") { [weak self] in
-                guard let self else { return }
-                self.currentQuestionIndex = 0
-                self.correctAnswers = 0
-                self.questionFactory?.loadData()
-            }
-        alertPresenter?.displayAlert(model: model)
-    }
-    @IBAction private func noButtonClick(_ sender: Any) {
-        guard let currentQuestion = currentQuestion else {
-            return
-=======
             preferredStyle: .alert)
         let action = UIAlertAction(title: "Попробовать ещё раз",
                                    style: .default) { [weak self] _ in
             guard let self = self else { return }
             self.presenter.restartGame()
->>>>>>> sprint_07
+
         }
         alert.addAction(action)
     }
